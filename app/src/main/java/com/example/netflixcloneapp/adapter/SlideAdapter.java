@@ -24,9 +24,9 @@ import java.util.List;
 
 public class SlideAdapter extends PagerAdapter {
 
-    private Context mContext ;
-    private List<Slide> mList ;
-
+    private Context mContext;
+    private List<Slide> mList;
+    SlideItemBinding bindslide;
 
     public SlideAdapter(Context mContext, List<Slide> mList) {
         this.mContext = mContext;
@@ -39,9 +39,9 @@ public class SlideAdapter extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
 
         //data binding
-LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-     SlideItemBinding bindslide= DataBindingUtil.inflate(inflater, R.layout.slide_item, null, false);
+        bindslide = DataBindingUtil.inflate(inflater, R.layout.slide_item, null, false);
 
         ImageView slideImg = bindslide.slideImg;
         TextView slideText = bindslide.slideTitle;
@@ -49,21 +49,17 @@ LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAY
         slideText.setText(mList.get(position).getTitle());
 
         container.addView(bindslide.getRoot());
-        return bindslide.getRoot();
-
-
-
-//bindslide.floatPointActionBg.setOnClickListener(new View.OnClickListener() {
 //
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(this.,MovePlayerActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-//    }
+        bindslide.floatPointActionBg.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext,MovePlayerActivity.class);
+                mContext.startActivity(intent);
+            }
+        });
 
+        return bindslide.getRoot();
     }
 
     @Override
@@ -83,5 +79,4 @@ LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAY
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         container.removeView((View)object);
     }
-
 }

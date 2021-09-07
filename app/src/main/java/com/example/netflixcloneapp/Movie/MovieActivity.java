@@ -39,11 +39,13 @@ public class MovieActivity extends AppCompatActivity implements MovieClickListen
     private ViewPager sliderPager;
     private TabLayout indicator;
     private RecyclerView MoviesRV;
+    ActivityMovieBinding bindMovieAct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-           Slider();
+        bindMovieAct = DataBindingUtil.setContentView(this, R.layout.activity_movie);
+        Slider();
         initMovie();
 
 
@@ -51,24 +53,27 @@ public class MovieActivity extends AppCompatActivity implements MovieClickListen
 
 
     public void Slider() {
-        //slider
-        ActivityMovieBinding bindMovieAct = DataBindingUtil.setContentView(this, R.layout.activity_movie);
-         Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new MovieActivity.SliderTimer(), 4000, 6000);
+
+       //slider
+        SlideAdapter adapter = new SlideAdapter(this, DataSource.getSlider());
+
+        sliderPager = bindMovieAct.sliderPager;
+        bindMovieAct.sliderPager.setAdapter(adapter);
+
         indicator = bindMovieAct.indicator;
 
-        SlideAdapter adapter = new SlideAdapter(this, DataSource.getSlider());
-        bindMovieAct.sliderPager.setAdapter(adapter);
-        sliderPager = bindMovieAct.sliderPager;
         // setup timer
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new MovieActivity.SliderTimer(), 4000, 6000);
         bindMovieAct.indicator.setupWithViewPager(sliderPager, true);
+
+
     }
     // Recyclerview Setup
     // ini data
 
     //movie slider
     public void initMovie() {
-        ActivityMovieBinding bindMovieAct = DataBindingUtil.setContentView(this, R.layout.activity_movie);
         MoviesRV = bindMovieAct.RvMovies;
         MovieAdapter movieAdapter = new MovieAdapter(this, DataSource.getPopularMovie(), this);
         bindMovieAct.RvMovies.setAdapter(movieAdapter);
@@ -106,14 +111,13 @@ public class MovieActivity extends AppCompatActivity implements MovieClickListen
 
     class SliderTimer extends TimerTask {
 
-
         @Override
         public void run() {
 
             MovieActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (sliderPager.getCurrentItem() < DataSource.getSlider().size()-1 ) {
+                    if (sliderPager.getCurrentItem() < DataSource.getSlider().size() - 1) {
                         sliderPager.setCurrentItem(sliderPager.getCurrentItem() + 1);
                     } else
                         sliderPager.setCurrentItem(0);
